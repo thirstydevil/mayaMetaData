@@ -5,7 +5,6 @@ import datetime
 from pprint import pformat
 import pymel.core as pCore
 import maya.OpenMaya as om
-
 import metaData
 import __main__
 
