@@ -3,22 +3,18 @@ import json
 import logging
 import datetime
 from pprint import pformat
-
 import pymel.core as pCore
 import maya.OpenMaya as om
 
 import metaData
 import __main__
-import tdtools.core.general as _gen
-import tdtools.core as core
-import mQt.core as ui
 
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)
+
 ASSET_TYPES = pCore.util.Enum("AssetType", ["BasicTransform", "Rig"])
 ASSET_MARKER = "AssetDb"
 ASSETDB_TYPES = pCore.util.Enum("AssetDbType", ["StaticProp", "DynamicProp"])
-# MAYA_SIGNAL_HANDLER = ui.MAYA_SIGNAL_HANDLER
 
 
 class MAsset_OtpVars(object):
@@ -476,8 +472,7 @@ def withLogLevel(level):
 
 def MAssetGlobalOptionsDialog():
     import tdtools.tools.assetBrowser as AssetBrowser
-
-    reload(AssetBrowser)
+    import mQt.core as ui
     ui.Display(AssetBrowser.AssetOptions.AssetOptionsDialog, DeleteExisting=True)
 
 
@@ -1090,6 +1085,7 @@ class MAssetUtils:
         if path.exists():
             if force:
                 from mQt import QtGui
+                import mQt.core as ui
 
                 if pCore.cmds.file(q=1, amf=1):
                     maya = ui.getMayaMainWindow()
@@ -1193,6 +1189,7 @@ class MAssetUtils:
             sceneProcessMaterials = [str(m) for m in MayaMaterialSpider.gMatHelper.GetMayaMaterials()]
             if not sceneProcessMaterials:
                 return
+            import mQt.core as ui
             with ui.MayaProgressBarManager(len(sceneProcessMaterials), False) as pBar:
                 pBar.setText("Checking For Scene Duplicate Materials")
                 dupMaterials = MayaMaterialSpider.gMatHelper.GetDuplicateMaterialsFromMaterialList(sceneProcessMaterials,
@@ -1684,6 +1681,7 @@ class MAssetUtils:
             res = []
 
             if Assets:
+                import mQt.core as ui
                 with ui.MayaProgressBarManager(len(Assets), IsInterruptable=False) as pBar:
                     pBar.setText("Duplicating Assets")
                     for i, a in enumerate(Assets):
@@ -2646,8 +2644,12 @@ MEL_WRAP_FUNCTIONS = [(MAsset_Rmb_Duplicate, ['string'], None),
 
 def RegisterMAssetFunctions(force=False):
     Install_FilterArray_RootTransform_MelProcedure()
-    for f, args, retType in MEL_WRAP_FUNCTIONS:
-        _gen.MelFunctioner(f, args, retType).Register(force=True)
+    try:
+        import tdtools.core.general as _gen
+        for f, args, retType in MEL_WRAP_FUNCTIONS:
+            _gen.MelFunctioner(f, args, retType).Register(force=True)
+    except ImportError as e:
+        pass
 
 # Register the functions on import.  Only does the ones that arn't already defined
 RegisterMAssetFunctions()

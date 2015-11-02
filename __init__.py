@@ -1,22 +1,12 @@
 # Currently installed metaClass definitions, redefined on imports
 import logging
-
 import mCore
-import AEmetaNodeTemplate
 import metaData
-import mCharacter
-import mPose
-import mRig
-import mSRC
 import mAsset
 import mExportTag
-import metaWrap
-import mTagField
-import _testMetaData
 
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.INFO)
-
 
 global RIGISTERED_METACLASS
 metaData.registerMClassInheritanceMapping()
@@ -28,15 +18,8 @@ def _Reload():
     """
 
     reload(metaData)
-    reload(mCharacter)
-    reload(mPose)
-    reload(mRig)
-    reload(mSRC)
     reload(mAsset)
     reload(mExportTag)
-    reload(metaWrap)
-    reload(mTagField)
-    reload(_testMetaData)
     metaData.registerMClassInheritanceMapping()
 
 
