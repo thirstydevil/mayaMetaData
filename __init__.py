@@ -1,7 +1,7 @@
 # Currently installed metaClass definitions, redefined on imports
 import logging
 import mCore
-import metaData
+from metaData import *
 import mAsset
 import mExportTag
 
